@@ -68,9 +68,9 @@ public class Explorer {
                 int nextX = current.x + moves[i][0];
                 int nextY = current.y + moves[i][1];
                 char nextC = map[nextY][nextX];
-                if (!visited[nextX][nextY] && nextC != DungeonMap.WALL) {
+                if (!visited[nextY][nextX] && nextC != DungeonMap.WALL) {
                     // found an empty node
-                    visited[start.y][start.x] = true;
+                    visited[nextY][nextX] = true;
                     Node next = new Node(nextX, nextY, nextC);
                     next.g = current.g + 1;
                     next.calcH(end);
@@ -85,6 +85,7 @@ public class Explorer {
 
     class Edge implements Comparable<Edge> {
         LinkedList<Node> path;
+
         public Edge(LinkedList<Node> path) {
             this.path = path;
         }
@@ -101,7 +102,7 @@ public class Explorer {
 
         @Override
         public String toString() {
-            return key() + "[]" + "";
+            return key() + "[" + this.path.size() + "]";
         }
     }
 
@@ -112,7 +113,8 @@ public class Explorer {
         Node current = keyLocations.peekFirst();
         visited.add(current.item);
 
-        PriorityQueue<LinkedList<Node>> pq = new PriorityQueue<>();
+        PriorityQueue<Edge> pq = new PriorityQueue<>();
+
         for (LinkedList<Node> edge : totalPaths) {
             if (edge.peek().equals(current)) {
                 pq.add(new Edge(edge));
@@ -122,9 +124,9 @@ public class Explorer {
         while (!pq.isEmpty()) {
             Edge edge = pq.poll();
             char item = edge.path.peekLast().item;
-            if (visited.contains(item) continue;
+            if (visited.contains(item)) continue;
             visited.add(item);
-            mst.put(edge.key(), edge;)
+            mst.put(edge.key(), edge);
             for (LinkedList<Node> nextEdges : totalPaths) {
                 if (nextEdges.peekFirst().item == item) {
                     pq.add(new Edge(nextEdges));
